@@ -1,0 +1,21 @@
+item_id,name,category,price,quantity,supplier
+1001,USB-C Cable,Electronics,9.99,120,Anker
+1002,Wireless Mouse,Electronics,19.99,75,Logitech
+1003,Mechanical Keyboard,Electronics,89.99,30,Keychron
+1004,27-inch Monitor,Electronics,229.99,18,Dell
+1005,Laptop Stand,Accessories,34.99,45,Rain Design
+1006,Notebook,Stationery,2.49,300,Moleskine
+1007,Ballpoint Pens (10-pack),Stationery,5.99,150,Pilot
+1008,Desk Lamp,Office,24.99,40,Philips
+1009,Office Chair,Office,149.99,12,Staples
+1010,External Hard Drive 1TB,Electronics,59.99,25,Western Digital
+1011,Flash Drive 64GB,Electronics,12.99,90,SanDisk
+1012,HDMI Cable,Electronics,8.49,200,Amazon Basics
+1013,Whiteboard Markers,Office,6.99,80,Expo
+1014,Standing Desk,Office,399.99,5,FlexiSpot
+1015,Paper Ream,Stationery,6.49,110,Hammermill
+1016,Noise Cancelling Headphones,Electronics,199.99,14,Sony
+1017,Webcam 1080p,Electronics,49.99,22,Logitech
+1018,Desk Organizer,Accessories,14.99,60,Umbra
+1019,Label Maker,Office,29.99,17,Brother
+1020,Surge Protector,Electronics,18.99,55,APC
