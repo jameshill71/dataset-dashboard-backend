@@ -7,10 +7,19 @@ Description:
     Description goes here.
 """ 
 from fastapi import FastAPI
-from app.services.datasets import list_datasets
+from fastapi.responses import JSONResponse
+from app.services.datasets import list_datasets, readiness_check
 
 # Create the fast api app. 
 app = FastAPI(title="Dataset Dashboard Backend")
+
+@app.get("/")
+def root():
+    return {
+        "service": "dataset-dashboard-backend",
+        "status":"ok",
+        "endpoints": ["/health", "/datasets", "/docs"]
+    }
 
 @app.get("/datasets")
 def datasets():
@@ -18,13 +27,7 @@ def datasets():
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    report = readiness_check()
+    status_code = 200 if report.get("ready") else 503
+    return JSONResponse(content=report, status_code=status_code)
 
-# Note: main is here, but ignored when running an API server with uvicorn
-def main():
-    print(health())
-    
-    
-# Script entry point
-if __name__ == "__main__":
-    main()
