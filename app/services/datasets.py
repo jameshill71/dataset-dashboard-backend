@@ -11,7 +11,7 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 from typing import Any
-
+from datetime import datetime, timezone
 
 
 def _data_dir() -> Path:
@@ -30,20 +30,40 @@ def _inspect_csv(path: Path) -> dict[str, Any]:
     Row count excludes the header row.
     """
     row_count = 0
+    stat = path.stat()
+    size_bytes = stat.st_size
+    modified_time = datetime.fromtimestamp(
+        stat.st_mtime,
+        tz=timezone.utc
+    ).isoformat()
+    
     with path.open("r", newline="", encoding="utf-8") as f:
         reader = csv.reader(f)
 
         header = next(reader, None)
         if header is None:
             # Empty file: no header, no rows
-            return {"name": path.name, "row_count": 0, "columns": []}
-
+            return {
+                "id": path.stem,
+                "filename": path.name,
+                "row_count": 0,
+                "columns": [],
+                "size_bytes": size_bytes,
+                "modified_time": modified_time,
+            }
         columns = [c.strip() for c in header]
 
         for _ in reader:
             row_count += 1
 
-    return {"name": path.name, "row_count": row_count, "columns": columns}
+    return {
+        "id": path.stem,
+        "filename": path.name,
+        "row_count": row_count,
+        "columns": columns,
+        "size_bytes": size_bytes,
+        "modified_time": modified_time,
+    }
 
 
 def list_datasets() -> list[dict[str, Any]]:
@@ -62,7 +82,8 @@ def list_datasets() -> list[dict[str, Any]]:
 
     return datasets
 
-def readiness_check() -> dict[str,Any]:
+
+def readiness_check() -> dict[str, Any]:
     """
     Readiness check for the service.
 
@@ -75,7 +96,7 @@ def readiness_check() -> dict[str,Any]:
       - each CSV is readable and has a header row
     """
     data_dir = _data_dir()
-    checks: dict[str,Any] = {
+    checks: dict[str, Any] = {
         "data_dir_exists": False,
         "data_dir_is_dir": False,
         "csv_count": 0,
@@ -90,6 +111,7 @@ def readiness_check() -> dict[str,Any]:
         return {
             "status": "error",
             "ready": False,
+            "datasets_found": 0,
             "checks": checks,
         }
 
@@ -101,6 +123,7 @@ def readiness_check() -> dict[str,Any]:
         return {
             "status": "error",
             "ready": False,
+            "datasets_found": 0,
             "checks": checks,
         }
 
@@ -115,6 +138,7 @@ def readiness_check() -> dict[str,Any]:
         return {
             "status": "degraded",
             "ready": False,
+            "datasets_found": checks["csv_count"],
             "checks": checks,
         }
 
